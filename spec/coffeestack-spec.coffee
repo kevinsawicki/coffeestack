@@ -3,15 +3,22 @@ path = require 'path'
 
 describe 'CoffeeStack', ->
   describe 'convertLine(filePath, line, column)', ->
-    it 'returns the line number and column numbers of the CoffeeScript file', ->
-      filePath = path.join(__dirname, 'fixtures', 'test.coffee')
-      expect(convertLine(filePath, 4, 2)).toEqual {line: 1, column: 0}
-      expect(convertLine(filePath, 10, 13)).toEqual {line: 7, column: 4}
+    describe 'when the path is to a CoffeeScript file', ->
+      it 'converts the JavaScript line and column to a valid CoffeeScript line and column', ->
+        filePath = path.join(__dirname, 'fixtures', 'test.coffee')
+        expect(convertLine(filePath, 4, 2)).toEqual {line: 1, column: 0}
+        expect(convertLine(filePath, 10, 13)).toEqual {line: 7, column: 4}
 
-    describe 'when a source map exists for the file', ->
-      it 'reads the source map instead of generating one', ->
-        filePath = path.join(__dirname, 'fixtures', 'js-with-map.js')
-        expect(convertLine(filePath, 9, 14)).toEqual {line: 3, column: 17}
+    describe 'when the path is to a JavaScript file', ->
+      describe 'when a source map exists for the file', ->
+        it 'reads the source map instead of generating one', ->
+          filePath = path.join(__dirname, 'fixtures', 'js-with-map.js')
+          expect(convertLine(filePath, 9, 14)).toEqual {line: 3, column: 17}
+
+      describe 'when a source map does not exist for the file', ->
+        it 'returns null', ->
+          filePath = path.join(__dirname, 'fixtures', 'no-map.js')
+          expect(convertLine(filePath, 1, 1)).toBeNull()
 
   describe 'convertStackTrace(stackTrace)', ->
     it 'maps JavaScript lines to their CoffeeScript lines', ->
