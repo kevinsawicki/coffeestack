@@ -20,6 +20,11 @@ describe 'CoffeeStack', ->
           filePath = path.join(__dirname, 'fixtures', 'js-with-map.js')
           expect(convertLine(filePath, 9, 14)).toEqual {line: 3, column: 17}
 
+        describe 'when the source map is invalid', ->
+          it 'returns null', ->
+            filePath = path.join(__dirname, 'fixtures', 'invalid.js')
+            expect(convertLine(filePath, 1, 1)).toBeNull()
+
       describe 'when a source map does not exist for the file', ->
         it 'returns null', ->
           filePath = path.join(__dirname, 'fixtures', 'no-map.js')

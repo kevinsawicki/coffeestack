@@ -4,20 +4,21 @@ CoffeeScript = require 'coffee-script'
 {SourceMapConsumer} = require 'source-map'
 
 convertLine = (filePath, line, column) ->
-  if path.extname(filePath) is '.js'
-    sourceMapPath = path.join(path.dirname(filePath), "#{path.basename(filePath, '.js')}.map")
-    if fs.existsSync(sourceMapPath)
-      sourceMap = new SourceMapConsumer(fs.readFileSync(sourceMapPath, 'utf8'))
-  else
-    try
+  try
+    sourceMapContents = null
+    if path.extname(filePath) is '.js'
+      sourceMapPath = path.join(path.dirname(filePath), "#{path.basename(filePath, '.js')}.map")
+      sourceMapContents =  fs.readFileSync(sourceMapPath, 'utf8')
+    else
       code = fs.readFileSync(filePath, 'utf8')
-      compiled = CoffeeScript.compile(code, {sourceMap: true, filename: filePath})
-      sourceMap = new SourceMapConsumer(compiled.v3SourceMap)
+      {v3SourceMap} = CoffeeScript.compile(code, {sourceMap: true, filename: filePath})
+      sourceMapContents = v3SourceMap
 
-  if sourceMap?
-    position = sourceMap.originalPositionFor({line, column})
-    if position.line? and position.column?
-      return {line: position.line, column: position.column}
+    if sourceMapContents
+      sourceMap = new SourceMapConsumer(sourceMapContents)
+      position = sourceMap.originalPositionFor({line, column})
+      if position.line? and position.column?
+        return {line: position.line, column: position.column}
 
   null
 
