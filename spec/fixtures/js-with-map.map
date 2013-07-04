@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "js-with-map.js",
+  "sourceRoot": "../..",
+  "sources": [
+    "spec/fixtures/js-with-map.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA;CAAA,IAAA,CAAA;;CAAA,CAAA,CACQ,GADF,CAAN;CAEI;;CAAA,EAAU,KAAV,CAAU;CAAA,YAAG;CAAb,IAAU;;CAAV;;CAFJ;CAAA"
+}

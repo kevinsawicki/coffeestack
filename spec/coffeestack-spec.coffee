@@ -8,6 +8,11 @@ describe 'CoffeeStack', ->
       expect(convertLine(filePath, 4, 2)).toEqual {line: 1, column: 0}
       expect(convertLine(filePath, 10, 13)).toEqual {line: 7, column: 4}
 
+    describe 'when a source map exists for the file', ->
+      it 'reads the source map instead of generating one', ->
+        filePath = path.join(__dirname, 'fixtures', 'js-with-map.js')
+        expect(convertLine(filePath, 9, 14)).toEqual {line: 3, column: 17}
+
   describe 'convertStackTrace(stackTrace)', ->
     it 'maps JavaScript lines to their CoffeeScript lines', ->
       Test = require './fixtures/test.coffee'
