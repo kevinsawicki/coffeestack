@@ -9,9 +9,10 @@ convertLine = (filePath, line, column) ->
     if fs.existsSync(sourceMapPath)
       sourceMap = new SourceMapConsumer(fs.readFileSync(sourceMapPath, 'utf8'))
   else
-    code = fs.readFileSync(filePath, 'utf8')
-    compiled = CoffeeScript.compile(code, {sourceMap: true, filename: filePath})
-    sourceMap = new SourceMapConsumer(compiled.v3SourceMap)
+    try
+      code = fs.readFileSync(filePath, 'utf8')
+      compiled = CoffeeScript.compile(code, {sourceMap: true, filename: filePath})
+      sourceMap = new SourceMapConsumer(compiled.v3SourceMap)
 
   if sourceMap?
     position = sourceMap.originalPositionFor({line, column})

@@ -9,6 +9,11 @@ describe 'CoffeeStack', ->
         expect(convertLine(filePath, 4, 2)).toEqual {line: 1, column: 0}
         expect(convertLine(filePath, 10, 13)).toEqual {line: 7, column: 4}
 
+      describe 'when the file has syntax errors', ->
+        it 'returns null', ->
+          filePath = path.join(__dirname, 'fixtures', 'invalid.coffee')
+          expect(convertLine(filePath, 1, 2)).toBeNull()
+
     describe 'when the path is to a JavaScript file', ->
       describe 'when a source map exists for the file', ->
         it 'reads the source map instead of generating one', ->
