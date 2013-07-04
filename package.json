@@ -1,0 +1,35 @@
+{
+  "name": "coffeestack",
+  "version": "0.0.0",
+  "description": "CoffeeScript stack trace converter",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine-focused --captureExceptions --coffee spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kevinsawicki/coffeestack.git"
+  },
+  "keywords": [
+    "CoffeeScript",
+    "JavaScript",
+    "stack",
+    "stack",
+    "trace",
+    "source",
+    "maps"
+  ],
+  "author": "",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/kevinsawicki/coffeestack/issues"
+  },
+  "dependencies": {
+    "coffee-script": "~1.6.3",
+    "source-map": "~0.1.25"
+  },
+  "devDependencies": {
+    "tantamount": "~0.2.0",
+    "jasmine-focused": "~0.7.0"
+  }
+}
