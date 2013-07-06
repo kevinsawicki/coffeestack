@@ -27,12 +27,11 @@ convertLine = (filePath, line, column, sourceMaps={}) ->
 
   null
 
-convertStackTrace = (stackTrace) ->
+convertStackTrace = (stackTrace, sourceMaps={}) ->
   return stackTrace unless stackTrace
 
   convertedLines = []
   atLinePattern = /^(\s+at .* )\((.*):(\d+):(\d+)\)/
-  sourceMaps = {}
   for line in stackTrace.split('\n')
     if match = atLinePattern.exec(line)
       filePath = match[2]
