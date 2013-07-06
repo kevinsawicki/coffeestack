@@ -15,10 +15,9 @@
     "CoffeeScript",
     "JavaScript",
     "stack",
-    "stack",
+    "stacktrace",
     "trace",
-    "source",
-    "maps"
+    "source maps"
   ],
   "author": {
     "name": "Kevin Sawicki",
