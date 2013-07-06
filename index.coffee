@@ -32,17 +32,17 @@ convertStackTrace = (stackTrace, sourceMaps={}) ->
 
   convertedLines = []
   atLinePattern = /^(\s+at .* )\((.*):(\d+):(\d+)\)/
-  for line in stackTrace.split('\n')
-    if match = atLinePattern.exec(line)
+  for stackTraceLine in stackTrace.split('\n')
+    if match = atLinePattern.exec(stackTraceLine)
       filePath = match[2]
       line = match[3]
       column = match[4]
       if mappedLine = convertLine(filePath, line, column, sourceMaps)
         convertedLines.push("#{match[1]}(#{mappedLine.source}:#{mappedLine.line}:#{mappedLine.column})")
       else
-        convertedLines.push(line)
+        convertedLines.push(stackTraceLine)
     else
-      convertedLines.push(line)
+      convertedLines.push(stackTraceLine)
 
   convertedLines.join('\n')
 
