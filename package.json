@@ -4,7 +4,8 @@
   "description": "CoffeeScript stack trace converter",
   "main": "./index.js",
   "scripts": {
-    "test": "jasmine-focused --captureExceptions --coffee spec"
+    "prepublish": "grunt clean lint coffee",
+    "test": "grunt test"
   },
   "repository": {
     "type": "git",
@@ -33,6 +34,12 @@
   },
   "devDependencies": {
     "tantamount": "~0.2.0",
-    "jasmine-focused": "~0.7.0"
+    "jasmine-focused": "~0.7.0",
+    "rimraf": "~2.2.0",
+    "grunt-cli": "~0.1.9",
+    "grunt": "~0.4.1",
+    "grunt-contrib-coffee": "~0.7.0",
+    "grunt-coffeelint": "0.0.7",
+    "grunt-shell": "~0.3.0"
   }
 }
