@@ -3,18 +3,19 @@ path = require 'path'
 CoffeeScript = require 'coffee-script'
 {SourceMapConsumer} = require 'source-map'
 
-convertLine = (filePath, line, column) ->
+convertLine = (filePath, line, column, sourceMaps={}) ->
   try
-    sourceMapContents = null
-    if path.extname(filePath) is '.js'
-      sourceMapPath = path.join(path.dirname(filePath), "#{path.basename(filePath, '.js')}.map")
-      sourceMapContents =  fs.readFileSync(sourceMapPath, 'utf8')
-    else
-      code = fs.readFileSync(filePath, 'utf8')
-      {v3SourceMap} = CoffeeScript.compile(code, {sourceMap: true, filename: filePath})
-      sourceMapContents = v3SourceMap
+    unless sourceMapContents = sourceMaps[filePath]
+      if path.extname(filePath) is '.js'
+        sourceMapPath = path.join(path.dirname(filePath), "#{path.basename(filePath, '.js')}.map")
+        sourceMapContents =  fs.readFileSync(sourceMapPath, 'utf8')
+      else
+        code = fs.readFileSync(filePath, 'utf8')
+        {v3SourceMap} = CoffeeScript.compile(code, {sourceMap: true, filename: filePath})
+        sourceMapContents = v3SourceMap
 
     if sourceMapContents
+      sourceMaps[filePath] = sourceMapContents
       sourceMap = new SourceMapConsumer(sourceMapContents)
       position = sourceMap.originalPositionFor({line, column})
       if position.line? and position.column?
@@ -31,12 +32,13 @@ convertStackTrace = (stackTrace) ->
 
   convertedLines = []
   atLinePattern = /^(\s+at .* )\((.*):(\d+):(\d+)\)/
+  sourceMaps = {}
   for line in stackTrace.split('\n')
     if match = atLinePattern.exec(line)
       filePath = match[2]
       line = match[3]
       column = match[4]
-      if mappedLine = convertLine(filePath, line, column)
+      if mappedLine = convertLine(filePath, line, column, sourceMaps)
         convertedLines.push("#{match[1]}(#{mappedLine.source}:#{mappedLine.line}:#{mappedLine.column})")
       else
         convertedLines.push(line)
