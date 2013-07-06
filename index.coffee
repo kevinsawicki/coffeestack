@@ -18,7 +18,11 @@ convertLine = (filePath, line, column) ->
       sourceMap = new SourceMapConsumer(sourceMapContents)
       position = sourceMap.originalPositionFor({line, column})
       if position.line? and position.column?
-        return {line: position.line, column: position.column}
+        if position.source
+          source = path.resolve(filePath, '..', position.source)
+        else
+          source = filePath
+        return {line: position.line, column: position.column, source}
 
   null
 
@@ -33,7 +37,7 @@ convertStackTrace = (stackTrace) ->
       line = match[3]
       column = match[4]
       if mappedLine = convertLine(filePath, line, column)
-        convertedLines.push("#{match[1]}(#{filePath}:#{mappedLine.line}:#{mappedLine.column})")
+        convertedLines.push("#{match[1]}(#{mappedLine.source}:#{mappedLine.line}:#{mappedLine.column})")
       else
         convertedLines.push(line)
     else

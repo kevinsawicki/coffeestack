@@ -6,8 +6,8 @@ describe 'CoffeeStack', ->
     describe 'when the path is to a CoffeeScript file', ->
       it 'converts the JavaScript line and column to a valid CoffeeScript line and column', ->
         filePath = path.join(__dirname, 'fixtures', 'test.coffee')
-        expect(convertLine(filePath, 4, 2)).toEqual {line: 1, column: 0}
-        expect(convertLine(filePath, 10, 13)).toEqual {line: 7, column: 4}
+        expect(convertLine(filePath, 4, 2)).toEqual {line: 1, column: 0, source: filePath}
+        expect(convertLine(filePath, 10, 13)).toEqual {line: 7, column: 4, source: filePath}
 
       describe 'when the file has syntax errors', ->
         it 'returns null', ->
@@ -18,7 +18,8 @@ describe 'CoffeeStack', ->
       describe 'when a source map exists for the file', ->
         it 'reads the source map instead of generating one', ->
           filePath = path.join(__dirname, 'fixtures', 'js-with-map.js')
-          expect(convertLine(filePath, 9, 14)).toEqual {line: 3, column: 17}
+          sourcePath = path.join(__dirname, 'fixtures', 'js-with-map.coffee')
+          expect(convertLine(filePath, 9, 14)).toEqual {line: 3, column: 17, source: sourcePath}
 
         describe 'when the source map is invalid', ->
           it 'returns null', ->
