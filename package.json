@@ -2,7 +2,7 @@
   "name": "coffeestack",
   "version": "0.1.0",
   "description": "CoffeeScript stack trace converter",
-  "main": "index.js",
+  "main": "./index.js",
   "scripts": {
     "test": "jasmine-focused --captureExceptions --coffee spec"
   },
@@ -19,7 +19,10 @@
     "source",
     "maps"
   ],
-  "author": "",
+  "author": {
+    "name": "Kevin Sawicki",
+    "email": "kevinsawicki@gmail.com"
+  },
   "license": "BSD",
   "bugs": {
     "url": "https://github.com/kevinsawicki/coffeestack/issues"
