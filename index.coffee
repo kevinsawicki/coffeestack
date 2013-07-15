@@ -7,7 +7,7 @@ convertLine = (filePath, line, column, sourceMaps={}) ->
   try
     unless sourceMapContents = sourceMaps[filePath]
       if path.extname(filePath) is '.js'
-        sourceMapPath = path.join(path.dirname(filePath), "#{path.basename(filePath, '.js')}.map")
+        sourceMapPath = "#{filePath}.map"
         sourceMapContents =  fs.readFileSync(sourceMapPath, 'utf8')
       else
         code = fs.readFileSync(filePath, 'utf8')
