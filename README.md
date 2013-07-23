@@ -7,3 +7,14 @@ Module to convert JavaScript stack traces to CoffeeScript stack traces.
 ```sh
 npm install coffeestack
 ```
+
+## Using
+
+```coffeescript
+{convertStackTrace} = require 'coffeestack'
+
+try
+  throw new Error('this is an error')
+catch error
+  console.error(convertStackTrace(error.stack))
+```
