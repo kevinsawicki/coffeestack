@@ -32,7 +32,7 @@
     "source-map": "~0.1.25"
   },
   "devDependencies": {
-    "jasmine-focused": "~0.12.0",
+    "jasmine-focused": "1.x",
     "rimraf": "~2.2.0",
     "grunt-cli": "~0.1.9",
     "grunt": "~0.4.1",
