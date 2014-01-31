@@ -37,7 +37,9 @@ convertStackTrace = (stackTrace, sourceMaps={}) ->
       filePath = match[2]
       line = match[3]
       column = match[4]
-      if mappedLine = convertLine(filePath, line, column, sourceMaps)
+      if path.extname(filePath) is '.js'
+        mappedLine = convertLine(filePath, line, column, sourceMaps)
+      if mappedLine?
         convertedLines.push("#{match[1]}(#{mappedLine.source}:#{mappedLine.line}:#{mappedLine.column})")
       else
         convertedLines.push(stackTraceLine)

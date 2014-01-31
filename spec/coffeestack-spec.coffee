@@ -43,4 +43,4 @@ describe 'CoffeeStack', ->
       stackTrace = stackTrace.split('\n')[0..1].join('\n')
       expect(convertStackTrace(stackTrace)).toBe """
         Error: this is an error
-            at Test.module.exports.Test.fail (#{__dirname}/fixtures/test.coffee:10:14)"""
+          at Test.module.exports.Test.fail (#{__dirname}/fixtures/test.coffee:10:15)"""
