@@ -19,8 +19,8 @@ convertLine = (filePath, line, column, sourceMaps={}) ->
       sourceMap = new SourceMapConsumer(sourceMapContents)
       position = sourceMap.originalPositionFor({line, column})
       if position.line? and position.column?
-        if position.source
-          source = path.resolve(filePath, '..', position.source)
+        if position.source and position.source isnt '.'
+          source = path.resolve(filePath, '..',  position.source)
         else
           source = filePath
         return {line: position.line, column: position.column, source}
