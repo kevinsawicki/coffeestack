@@ -35,6 +35,11 @@ compileSourceMap = (code, filePath, codeCachePath) ->
   writeSourceMapToCache(codeCachePath, v3SourceMap)
   v3SourceMap
 
+getSourceMapPosition = (sourceMapContents, line, column)->
+  SourceMapConsumer ?= require('source-map').SourceMapConsumer
+  sourceMap = new SourceMapConsumer(sourceMapContents)
+  sourceMap.originalPositionFor({line, column})
+
 convertLine = (filePath, line, column, sourceMaps={}) ->
   try
     unless sourceMapContents = sourceMaps[filePath]
@@ -49,9 +54,7 @@ convertLine = (filePath, line, column, sourceMaps={}) ->
 
     if sourceMapContents
       sourceMaps[filePath] = sourceMapContents
-      SourceMapConsumer ?= require('source-map').SourceMapConsumer
-      sourceMap = new SourceMapConsumer(sourceMapContents)
-      position = sourceMap.originalPositionFor({line, column})
+      position = getSourceMapPosition(sourceMapContents, line, column)
       if position.line? and position.column?
         if position.source and position.source isnt '.'
           source = path.resolve(filePath, '..',  position.source)
