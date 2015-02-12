@@ -12,7 +12,7 @@ getCachePath = (code) ->
   return unless cachePath
 
   digest = crypto.createHash('sha1').update(code, 'utf8').digest('hex')
-  path.join(cachePath, CoffeeScriptVersion, "#{digest}.map")
+  path.join(cachePath, CoffeeScriptVersion, "#{digest}.json")
 
 getCachedSourceMap = (codeCachePath) ->
   if fs.isFileSync(codeCachePath)
