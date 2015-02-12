@@ -31,7 +31,6 @@ writeSourceMapToCache = (codeCachePath, sourceMap) ->
 compileSourceMap = (code, filePath, codeCachePath) ->
   CoffeeScript ?= require 'coffee-script'
   {v3SourceMap} = CoffeeScript.compile(code, {sourceMap: true, filename: filePath})
-
   writeSourceMapToCache(codeCachePath, v3SourceMap)
   v3SourceMap
 
