@@ -1,7 +1,43 @@
-fs = require 'fs'
+crypto = require 'crypto'
+fs = require 'fs-plus'
 path = require 'path'
-CoffeeScript = require 'coffee-script'
-{SourceMapConsumer} = require 'source-map'
+
+CoffeeScriptVersion = require('coffee-script/package.json').version
+CoffeeScript = null # defer until used
+SourceMapConsumer = null # defer until used
+
+cachePath = null
+
+getCachePath = (code) ->
+  return unless cachePath
+
+  digest = crypto.createHash('sha1').update(code, 'utf8').digest('hex')
+  path.join(cachePath, CoffeeScriptVersion, "#{digest}.json")
+
+getCachedSourceMap = (codeCachePath) ->
+  if fs.isFileSync(codeCachePath)
+    try
+      return fs.readFileSync(codeCachePath, 'utf8')
+
+  return
+
+writeSourceMapToCache = (codeCachePath, sourceMap) ->
+  if codeCachePath
+    try
+      fs.writeFileSync(codeCachePath, sourceMap)
+
+  return
+
+compileSourceMap = (code, filePath, codeCachePath) ->
+  CoffeeScript ?= require 'coffee-script'
+  {v3SourceMap} = CoffeeScript.compile(code, {sourceMap: true, filename: filePath})
+  writeSourceMapToCache(codeCachePath, v3SourceMap)
+  v3SourceMap
+
+getSourceMapPosition = (sourceMapContents, line, column)->
+  SourceMapConsumer ?= require('source-map').SourceMapConsumer
+  sourceMap = new SourceMapConsumer(sourceMapContents)
+  sourceMap.originalPositionFor({line, column})
 
 convertLine = (filePath, line, column, sourceMaps={}) ->
   try
@@ -11,13 +47,13 @@ convertLine = (filePath, line, column, sourceMaps={}) ->
         sourceMapContents =  fs.readFileSync(sourceMapPath, 'utf8')
       else
         code = fs.readFileSync(filePath, 'utf8')
-        {v3SourceMap} = CoffeeScript.compile(code, {sourceMap: true, filename: filePath})
-        sourceMapContents = v3SourceMap
+        codeCachePath = getCachePath(code)
+        sourceMapContents = getCachedSourceMap(codeCachePath)
+        sourceMapContents ?= compileSourceMap(code, filePath, codeCachePath)
 
     if sourceMapContents
       sourceMaps[filePath] = sourceMapContents
-      sourceMap = new SourceMapConsumer(sourceMapContents)
-      position = sourceMap.originalPositionFor({line, column})
+      position = getSourceMapPosition(sourceMapContents, line, column)
       if position.line? and position.column?
         if position.source and position.source isnt '.'
           source = path.resolve(filePath, '..',  position.source)
@@ -48,4 +84,6 @@ convertStackTrace = (stackTrace, sourceMaps={}) ->
 
   convertedLines.join('\n')
 
-module.exports = {convertLine, convertStackTrace}
+exports.convertLine = convertLine
+exports.convertStackTrace = convertStackTrace
+exports.setCacheDirectory = (newCachePath) -> cachePath = newCachePath

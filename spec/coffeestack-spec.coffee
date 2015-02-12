@@ -1,5 +1,8 @@
 path = require 'path'
-{convertLine, convertStackTrace} = require '../index'
+temp = require 'temp'
+{convertLine, convertStackTrace, setCacheDirectory} = require '../index'
+
+temp.track()
 
 describe 'CoffeeStack', ->
   describe 'convertLine(filePath, line, column)', ->
@@ -44,3 +47,18 @@ describe 'CoffeeStack', ->
       expect(convertStackTrace(stackTrace)).toBe """
         Error: this is an error
           at Test.module.exports.Test.fail (#{__dirname}/fixtures/test.coffee:10:15)"""
+
+  describe 'source map caching', ->
+    it 'stores compiled source maps and uses them on subsequeunt calls', ->
+      CoffeeScript = require 'coffee-script'
+      spyOn(CoffeeScript, 'compile').andCallThrough()
+
+      cacheDir = temp.mkdirSync('coffeestack-cache')
+      setCacheDirectory(cacheDir)
+
+      filePath = path.join(__dirname, 'fixtures', 'test.coffee')
+      expect(convertLine(filePath, 4, 2)).toEqual {line: 1, column: 0, source: filePath}
+      expect(CoffeeScript.compile.callCount).toBe 1
+
+      expect(convertLine(filePath, 4, 2)).toEqual {line: 1, column: 0, source: filePath}
+      expect(CoffeeScript.compile.callCount).toBe 1
