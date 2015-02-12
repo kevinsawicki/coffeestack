@@ -29,15 +29,17 @@
   },
   "dependencies": {
     "coffee-script": "~1.8.0",
+    "fs-plus": "^2.5.0",
     "source-map": "~0.1.43"
   },
   "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-cli": "~0.1.9",
+    "grunt-coffeelint": "0.0.7",
+    "grunt-contrib-coffee": "~0.7.0",
+    "grunt-shell": "~0.3.0",
     "jasmine-focused": "1.x",
     "rimraf": "~2.2.0",
-    "grunt-cli": "~0.1.9",
-    "grunt": "~0.4.1",
-    "grunt-contrib-coffee": "~0.7.0",
-    "grunt-coffeelint": "0.0.7",
-    "grunt-shell": "~0.3.0"
+    "temp": "^0.8.1"
   }
 }
