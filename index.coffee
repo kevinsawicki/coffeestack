@@ -87,3 +87,4 @@ convertStackTrace = (stackTrace, sourceMaps={}) ->
 exports.convertLine = convertLine
 exports.convertStackTrace = convertStackTrace
 exports.setCacheDirectory = (newCachePath) -> cachePath = newCachePath
+exports.getCacheDirectory = -> cachePath

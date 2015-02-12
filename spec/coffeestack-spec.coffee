@@ -1,6 +1,6 @@
 path = require 'path'
 temp = require 'temp'
-{convertLine, convertStackTrace, setCacheDirectory} = require '../index'
+{convertLine, convertStackTrace, getCacheDirectory, setCacheDirectory} = require '../index'
 
 temp.track()
 
@@ -55,6 +55,7 @@ describe 'CoffeeStack', ->
 
       cacheDir = temp.mkdirSync('coffeestack-cache')
       setCacheDirectory(cacheDir)
+      expect(getCacheDirectory()).toBe cacheDir
 
       filePath = path.join(__dirname, 'fixtures', 'test.coffee')
       expect(convertLine(filePath, 4, 2)).toEqual {line: 1, column: 0, source: filePath}
