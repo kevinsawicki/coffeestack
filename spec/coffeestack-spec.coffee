@@ -49,7 +49,7 @@ describe 'CoffeeStack', ->
           at Test.module.exports.Test.fail (#{__dirname}/fixtures/test.coffee:10:15)"""
 
   describe 'source map caching', ->
-    it 'stores compiled source maps the cache and uses them on subsequeunt calls', ->
+    it 'stores compiled source maps and uses them on subsequeunt calls', ->
       CoffeeScript = require 'coffee-script'
       spyOn(CoffeeScript, 'compile').andCallThrough()
 
