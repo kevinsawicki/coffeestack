@@ -2,7 +2,7 @@ crypto = require 'crypto'
 fs = require 'fs-plus'
 path = require 'path'
 
-CoffeeScriptVersion = require('coffee-script/package.json').version
+CoffeeScriptVersion = null # defer until used
 CoffeeScript = null # defer until used
 SourceMapConsumer = null # defer until used
 
@@ -12,6 +12,7 @@ getCachePath = (code) ->
   return unless cachePath
 
   digest = crypto.createHash('sha1').update(code, 'utf8').digest('hex')
+  CoffeeScriptVersion ?= require('coffee-script/package.json').version
   path.join(cachePath, CoffeeScriptVersion, "#{digest}.json")
 
 getCachedSourceMap = (codeCachePath) ->
