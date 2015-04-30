@@ -29,8 +29,22 @@ writeSourceMapToCache = (codeCachePath, sourceMap) ->
 
   return
 
+loadCoffeeScript = ->
+  coffee = require 'coffee-script'
+
+  # Work around for https://github.com/jashkenas/coffeescript/issues/3890
+  coffeePrepareStackTrace = Error.prepareStackTrace
+  if coffeePrepareStackTrace?
+    Error.prepareStackTrace = (error, stack) ->
+      try
+        return coffeePrepareStackTrace(error, stack)
+      catch coffeeError
+        return stack
+
+  coffee
+
 compileSourceMap = (code, filePath, codeCachePath) ->
-  CoffeeScript ?= require 'coffee-script'
+  CoffeeScript ?= loadCoffeeScript()
   {v3SourceMap} = CoffeeScript.compile(code, {sourceMap: true, filename: filePath})
   writeSourceMapToCache(codeCachePath, v3SourceMap)
   v3SourceMap

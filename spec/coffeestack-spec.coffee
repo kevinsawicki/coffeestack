@@ -1,3 +1,4 @@
+fs = require 'fs'
 path = require 'path'
 temp = require 'temp'
 {convertLine, convertStackTrace, getCacheDirectory, setCacheDirectory} = require '../index'
@@ -63,3 +64,23 @@ describe 'CoffeeStack', ->
 
       expect(convertLine(filePath, 4, 2)).toEqual {line: 1, column: 0, source: filePath}
       expect(CoffeeScript.compile.callCount).toBe 1
+
+  it "prevents errors from being thrown by CoffeeScript's Error.prepareStackTrace", ->
+    convertStackTrace """
+      Error: this is an error
+        at Test.module.exports.Test.fail (#{__dirname}/fixtures/does-not-exist.coffee:10:15)
+    """
+
+    filePath = path.join(temp.mkdirSync(), 'file.coffee')
+    fs.writeFileSync filePath, "module.exports = -> throw new Error('hello world')"
+    throwsAnError = require(filePath)
+    fs.unlinkSync(filePath)
+
+    caughtError = null
+    try
+      throwsAnError()
+    catch error
+      caughtError = error
+    expect(caughtError.message).toBe 'hello world'
+    expect(-> caughtError.stack).not.toThrow()
+    expect(caughtError.stack.toString()).toContain(filePath)
