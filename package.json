@@ -33,7 +33,7 @@
     "source-map": "~0.1.43"
   },
   "devDependencies": {
-    "grunt": "~0.4.1",
+    "grunt": "~1.5.3",
     "grunt-cli": "~0.1.9",
     "grunt-coffeelint": "0.0.7",
     "grunt-contrib-coffee": "~0.7.0",
